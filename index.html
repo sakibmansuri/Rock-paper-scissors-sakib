@@ -4,24 +4,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
+    <title>Rps</title>
     <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: linear-gradient(to right, rgb(85, 80, 80), rgb(213, 215, 217));
+            background: linear-gradient(to right, rgb(135, 87, 87), rgb(113, 74, 74));
+        }
+
+        .hey {
+            font-size: 55px;
+            text-decoration: underline;
+            font-weight: bold;
+            font-family: Arial;
+            margin-left: 40px;
+            color: white;
+            margin: 30px 0px 0px 0px;
+            width: 100vw;
         }
 
         .main {
             padding: 20px;
-            margin: 30px;
-            margin-top: 50px;
-            height: 150px;
-            width: 260px;
+            margin: 50px 15px 50px 15px;
+            height: 170px;
+            width: 180px;
             font-size: 50px;
             font-family: 'Times New Roman', Times, serif;
             color: rgb(0, 0, 0);
             background: linear-gradient(to bottom, rgb(157, 193, 244), rgb(42, 35, 91));
             border: none;
             border-radius: 80px;
+            cursor: pointer;
             transition: .3s;
         }
 
@@ -30,17 +47,110 @@
         }
 
         .reset {
+            display: block;
             background: rgb(255, 253, 253);
-            color: rgb(220, 103, 103);
-            font-size: 20px;
+            color: rgb(0, 0, 0);
+            font-size: 15px;
             text-align: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 30px;
+            margin: 10px 30px;
+            transition: .3s;
         }
 
-        .reset:hover{
-            background-color: gray;
+        .reset:hover {
+            transform: scale(1.1);
         }
 
+        .js-score {
+            font-size: 30px;
+            color: aliceblue;
+        }
 
+        .score {
+            margin: 50px 0px 25px 0px;
+        }
+
+        .js-moves {
+            font-size: 30px;
+            color: aliceblue;
+        }
+
+        .move-text {
+            font-size: 30px;
+            font-weight: bold;
+            font-family: Arial;
+            margin-top: 20px;
+        }
+
+        .js-result {
+            font-size: 30px;
+            color: aliceblue;
+        }
+
+        .result {
+            font-size: 45px;
+            font-weight: bold;
+            font-family: Arial;
+            margin-top: 20px;
+        }
+
+        .move-img {
+            width: 100px;
+            padding: 0;
+        }
+
+        .move-img2 {
+            width: 80px;
+        }
+
+        @media (max-width: 600px) {
+            .hey {
+                font-size: 35px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .main {
+                height: 90px;
+                width: 90px;
+                transition: .3s;
+            }
+
+            .main:hover {
+                transform: scale(1.2);
+            }
+
+            .move-img {
+                width: 50px;
+                padding: 0;
+            }
+
+            .move-text {
+                font-size: 25px;
+            }
+
+            .result {
+                font-size: 65px;
+            }
+
+            .score {
+                margin: 15px 0px 20px 020px ;
+                font-size: 25px;
+            }
+
+            .reset {
+                align-self: center;
+                width: 80vw;
+            }
+
+            .cont {
+                display: flex;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
@@ -51,22 +161,37 @@
     1/3 to <2/3 = paper
     2/3 to 1 = scissors 
     -->
-    <button class="main" onclick="
-    played('rock')">ROCK</button>
+    
+    <p class="hey">Rock Paper Scissors</p>
 
     <button class="main" onclick="
-    played('paper')">PAPER</button>
+    played('rock')"><img class="move-img"
+            src="https://supersimple.dev/projects/rock-paper-scissors/images/rock-emoji.png" alt="Rock"></button>
 
     <button class="main" onclick="
-    played('scissors')">SCISSORS</button>
+    played('paper')"><img class="move-img"
+            src="https://supersimple.dev/projects/rock-paper-scissors/images/paper-emoji.png" alt="Paper"></button>
 
+    <button class="main" onclick="
+    played('scissors')"><img class="move-img"
+            src="	https://supersimple.dev/projects/rock-paper-scissors/images/scissors-emoji.png"
+            alt="Scissors"></button>
+
+    <p class="js-moves move-text"></p>
+
+    <p class="js-result result"></p>
+    
+    <p class="js-score score"></p>
+
+    <div class="cont">
     <button class="reset" onclick="
     score.wins = 0;
     score.losses = 0;
     score.ties = 0;
+    showScore();
     localStorage.removeItem('score');
-    alert('Score Reset.')
     ">RESET SCORE</button>
+    </div>
     <!-- 
     0 to <1/3 = rock
     1/3 to <2/3 = paper
@@ -75,11 +200,12 @@
 
     <script>
         let score = JSON.parse(localStorage.getItem('score')) || {
-                wins: 0,
-                losses: 0,
-                ties: 0
-            };
-            
+            wins: 0,
+            losses: 0,
+            ties: 0
+        };
+        showScore();
+
         /* DOES SAME AS ABOVE.
         if (!score) {
             score = {
@@ -137,10 +263,24 @@
                 score.ties += 1;
             }
 
-            localStorage.setItem('score' , JSON.stringify(score));
+            localStorage.setItem('score', JSON.stringify(score));
 
-            alert(`You picked ${daMove}. Computer picked ${compMove}. ${result}. 
-Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
+            document.querySelector('.js-moves').innerHTML = `You 
+        <img class="move-img2" src="https://supersimple.dev/projects/rock-paper-scissors/images/${daMove}-emoji.png" alt="Rock">
+        <img class="move-img2" src="https://supersimple.dev/projects/rock-paper-scissors/images/${compMove}-emoji.png" alt="Rock"> Computer`;
+
+            document.querySelector('.js-result').innerHTML = result;
+
+            showScore();
+
+
+            //             alert(`You picked ${daMove}. Computer picked ${compMove}. ${result}. 
+            // Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
+        }
+
+        function showScore() {
+            document.querySelector('.js-score')
+                .innerHTML = `Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
         }
 
         function pickCompMove() {
