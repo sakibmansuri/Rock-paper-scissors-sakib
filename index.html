@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rps</title>
-     <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwuXISJZ0th0DjuKrp-ktN9LEVxX0KEKsrNA&s" type="image/x-icon">
+    <title>Rock Paper Scissors</title>
+    <link rel="shortcut icon"
+        href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwuXISJZ0th0DjuKrp-ktN9LEVxX0KEKsrNA&s"
+        type="image/x-icon">
     <style>
         * {
             padding: 0;
@@ -14,6 +16,7 @@
         }
 
         body {
+            font-family: Arial, Helvetica, sans-serif;
             background: linear-gradient(to right, rgb(135, 87, 87), rgb(113, 74, 74));
         }
 
@@ -62,6 +65,24 @@
         }
 
         .reset:hover {
+            transform: scale(1.1);
+        }
+
+        .auto {
+            display: block;
+            background: rgb(255, 253, 253);
+            color: rgb(0, 0, 0);
+            font-size: 15px;
+            text-align: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 30px;
+            margin: 10px 30px;
+            transition: .3s;
+        }
+
+        .auto:hover {
             transform: scale(1.1);
         }
 
@@ -138,7 +159,7 @@
             }
 
             .score {
-                margin: 15px 0px 20px 020px ;
+                margin: 15px 0px 20px 020px;
                 font-size: 25px;
             }
 
@@ -147,10 +168,43 @@
                 width: 80vw;
             }
 
+            .auto {
+                align-self: center;
+                width: 80vw;
+            }
+
             .cont {
                 display: flex;
                 justify-content: center;
             }
+        }
+
+        @media (max-width: 368px) {
+            .main {
+                height: 80px;
+                width: 80px;
+                transition: .3s;
+            }
+
+            .move-img {
+                width: 40px;
+                padding: 0;
+            }
+
+        }
+
+        @media (max-width: 350px) {
+            .main {
+                height: 60px;
+                width: 60px;
+                transition: .3s;
+            }
+
+            .move-img {
+                width: 40px;
+                padding: 0;
+            }
+
         }
     </style>
 </head>
@@ -162,7 +216,7 @@
     1/3 to <2/3 = paper
     2/3 to 1 = scissors 
     -->
-    
+
     <p class="hey">Rock Paper Scissors</p>
 
     <button class="main" onclick="
@@ -181,17 +235,23 @@
     <p class="js-moves move-text"></p>
 
     <p class="js-result result"></p>
-    
+
     <p class="js-score score"></p>
 
     <div class="cont">
-    <button class="reset" onclick="
+        <button class="reset" onclick="
     score.wins = 0;
     score.losses = 0;
     score.ties = 0;
     showScore();
     localStorage.removeItem('score');
     ">RESET SCORE</button>
+    </div>
+
+    <div class="cont">
+        <button class="auto" onclick="
+            autoPlay();
+            ">AUTO PLAY</button>
     </div>
     <!-- 
     0 to <1/3 = rock
@@ -217,6 +277,27 @@
         }
         */
 
+        let isAutoPlaying = false;
+        let intervalID;
+
+        function autoPlay() {
+
+            if (!isAutoPlaying) {
+                intervalID = setInterval(function() {
+                const autoMove = pickCompMove();
+                played(autoMove);
+                
+            }, 1000);
+
+            isAutoPlaying = true;
+                
+            } else {
+                clearInterval(intervalID);
+                isAutoPlaying = false;
+            }
+        }
+
+        
         function played(daMove) {
             const compMove = pickCompMove();
 
